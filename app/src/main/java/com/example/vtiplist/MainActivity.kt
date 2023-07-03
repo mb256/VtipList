@@ -6,9 +6,9 @@ import androidx.activity.compose.setContent
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -32,25 +32,23 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             VtipListTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colors.background
-                )
-                {
                     Greeting()
-                }
             }
+
         }
     }
 }
 
 
 @Composable
-fun RandomJoke(modifier: Modifier = Modifier) {
+fun RandomJoke(modifier: Modifier) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = modifier.fillMaxWidth()
+        modifier = modifier
+            .fillMaxWidth()
+            //.wrapContentHeight()
+            //.heightIn(0.dp, 300.dp) //mention max height here
+            //.height(500.dp)
     ) {
         Text(
             text = "Náhodný vtip: ",
@@ -67,10 +65,54 @@ fun RandomJoke(modifier: Modifier = Modifier) {
                     "bla bla bla bla ...\n" +
                     "bla bla bla bla ...\n" +
                     "bla bla bla bla ...\n" +
+                    "bla bla bla bla ...\n" +
+                    "bla bla bla bla ...\n" +
+                    "bla bla bla bla ...\n" +
+                    "bla bla bla bla ...\n" +
+                    "bla bla bla bla ...\n" +
+                    "bla bla bla bla ...\n" +
+                    "bla bla bla bla ...\n" +
+                    "bla bla bla bla ...\n" +
+                    "bla bla bla bla ...\n" +
+                    "bla bla bla bla ...\n" +
+                    "bla bla bla bla ...\n" +
+                    "bla bla bla bla ...\n" +
+                    "bla bla bla bla ...\n" +
+                    "bla bla bla bla ...\n" +
+                    "bla bla bla bla ...\n" +
+                    "bla bla bla bla ...\n" +
+                    "bla bla bla bla ...\n" +
+                    "bla bla bla bla ...\n" +
+                    "bla bla bla bla ...\n" +
+                    "bla bla bla bla ...\n" +
+                    "bla bla bla bla ...\n" +
+                    "bla bla bla bla ...\n" +
+                    "bla bla bla bla ...\n" +
+                    "bla bla bla bla ...\n" +
+                    "bla bla bla bla ...\n" +
+                    "bla bla bla bla ...\n" +
+                    "bla bla bla bla ...\n" +
+                    "bla bla bla bla ...\n" +
+                    "bla bla bla bla ...\n" +
+                    "bla bla bla bla ...\n" +
+                    "bla bla bla bla ...\n" +
+                    "bla bla bla bla ...\n" +
+                    "bla bla bla bla ...\n" +
+                    "bla bla bla bla ...\n" +
+                    "bla bla bla bla ...\n" +
+                    "bla bla bla bla ...\n" +
+                    "bla bla bla bla ...\n" +
+                    "bla bla bla bla ...\n" +
+                    "bla bla bla bla ...\n" +
+                    "bla bla bla bla ...\n" +
+                    "bla bla bla bla ...\n" +
+                    "bla bla bla bla ...\n" +
+                    "bla bla bla bla ...\n" +
                     "bla bla bla bla ...",
             textAlign = TextAlign.Center,
             modifier = Modifier
                 .fillMaxWidth()
+                .verticalScroll(state = rememberScrollState())
         )
     }
 }
@@ -82,10 +124,12 @@ data class CategoryDescr(
 )
 
 @Composable
-fun JokeCategory(modifier: Modifier = Modifier) {
+fun JokeCategory(modifier: Modifier) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.wrapContentHeight())
+        //modifier = Modifier.wrapContentHeight()
+        modifier = modifier
+    )
     {
 
         Text(text = "Kategorie vtipů:",
@@ -112,37 +156,34 @@ fun Category(
     cat: CategoryDescr,
     modifier: Modifier = Modifier) {
     // Do Icons or Buttons ...
-    Surface(
-        shape = MaterialTheme.shapes.small,
-        modifier = modifier
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier.wrapContentSize()
     ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.wrapContentSize()
-        ) {
-            Image(
-                painter = painterResource(id = cat.imageRes),
-                contentDescription = null,
-                contentScale = ContentScale.Crop,
-                modifier = Modifier
-                    .size(64.dp)
-                    .clip(CircleShape)
-            )
-            Text(
-                text = cat.text,
-                //style = MaterialTheme.typography.h4,
-                modifier = Modifier.padding(horizontal = 16.dp)
-            )
-        }
+        Image(
+            painter = painterResource(id = cat.imageRes),
+            contentDescription = null,
+            contentScale = ContentScale.Crop,
+            modifier = Modifier
+                .size(64.dp)
+                .clip(CircleShape)
+        )
+        Text(
+            text = cat.text,
+            //style = MaterialTheme.typography.h4,
+            modifier = Modifier.padding(horizontal = 16.dp)
+        )
     }
 }
 
 @Composable
-fun RowCategory(cat1: CategoryDescr, cat2: CategoryDescr) {
-    Row(verticalAlignment = Alignment.CenterVertically) {
-        Category(cat1)
-        Spacer(modifier = Modifier.width(30.dp))
-        Category(cat2)
+fun RowCategory(cat1: CategoryDescr,
+                cat2: CategoryDescr,
+        ) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Category(cat1)
+                Spacer(modifier = Modifier.width(30.dp))
+                Category(cat2)
     }
 }
 
@@ -166,10 +207,11 @@ fun Greeting() {
         val offset = Offset(5.0f, 10.0f)
         Text(text = "Vtip list",
             color = Color.DarkGray,
-            fontSize = 18.sp,
+            fontSize = 24.sp,
             textAlign = TextAlign.Center,
             modifier = Modifier
-                .fillMaxWidth(),
+                .fillMaxWidth()
+                .weight(1F),
             style = TextStyle(
                 fontSize = 24.sp,
                 shadow = Shadow(
@@ -177,11 +219,11 @@ fun Greeting() {
                 )
             )
         )
-        Spacer(modifier = Modifier.height(16.dp))
-        RandomJoke()
-        Spacer(modifier = Modifier.height(32.dp))
-        JokeCategory()
         Spacer(modifier = Modifier.height(10.dp))
+        RandomJoke(modifier = Modifier.weight(6F))
+        Spacer(modifier = Modifier.height(32.dp))
+        JokeCategory(modifier = Modifier.weight(4F))
+        Spacer(modifier = Modifier.height(5.dp))
     }
 }
 
@@ -200,7 +242,7 @@ fun DefaultPreview() {
 @Preview(showBackground = true)
 @Composable
 fun RandomJokePreview() {
-    RandomJoke()
+    RandomJoke(modifier = Modifier.wrapContentHeight())
 }
 
 @Preview
@@ -221,7 +263,7 @@ fun RowCategoryPreview() {
 @Preview(showBackground = true)
 @Composable
 fun JokeCategoryPreview() {
-    JokeCategory()
+    JokeCategory(modifier = Modifier.wrapContentHeight())
 }
 @Preview(showBackground = true)
 @Composable
