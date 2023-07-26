@@ -1,23 +1,29 @@
 package com.example.vtiplist
 
+import android.content.Intent
 import android.os.Bundle
+import android.service.autofill.OnClickAction
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.Button
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
@@ -34,7 +40,6 @@ class MainActivity : ComponentActivity() {
             VtipListTheme {
                     Greeting()
             }
-
         }
     }
 }
@@ -53,11 +58,13 @@ fun RandomJoke(modifier: Modifier) {
         Text(
             text = "Náhodný vtip: ",
             fontSize = 14.sp,
+            color = Color.White,
             textAlign = TextAlign.Center,
             modifier = Modifier
                 .fillMaxWidth()
+                .background(Color.Black)
         )
-        Spacer(modifier = Modifier.height(5.dp))
+        Spacer(modifier = Modifier.height(5.dp).background(Color.Gray))
         Text(
             text = "Tri gracie prijdou do baru ... a bla \n" +
                     "bla bla bla bla ...\n" +
@@ -110,8 +117,10 @@ fun RandomJoke(modifier: Modifier) {
                     "bla bla bla bla ...\n" +
                     "bla bla bla bla ...",
             textAlign = TextAlign.Center,
+            color = Color.White,
             modifier = Modifier
                 .fillMaxWidth()
+                .background(Color.Black)
                 .verticalScroll(state = rememberScrollState())
         )
     }
@@ -128,51 +137,68 @@ fun JokeCategory(modifier: Modifier) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         //modifier = Modifier.wrapContentHeight()
-        modifier = modifier
+        modifier = modifier.background(Color(0xff111111))
     )
     {
 
         Text(text = "Kategorie vtipů:",
             textAlign = TextAlign.Center,
             fontSize = 14.sp,
+            color = Color.White,
             modifier = Modifier
                 .fillMaxWidth()
+                .background(Color.Black)
         )
-        Spacer(modifier = Modifier.height(15.dp))
+        Spacer(modifier = Modifier.height(5.dp))
 
         val cat1 = CategoryDescr(R.drawable.figure, "Kategorie 1")
         val cat2 = CategoryDescr(R.drawable.body_shape, "Kategorie 2")
         RowCategory(cat1, cat2)
-        Spacer(modifier = Modifier.height(15.dp))
+        Spacer(modifier = Modifier.height(5.dp))
         RowCategory(cat1, cat2)
-        Spacer(modifier = Modifier.height(15.dp))
+        Spacer(modifier = Modifier.height(5.dp))
         RowCategory(cat1, cat2)
-        Spacer(modifier = Modifier.height(15.dp))
+        Spacer(modifier = Modifier.height(5.dp))
     }
 }
+
 
 @Composable
 fun Category(
     cat: CategoryDescr,
-    modifier: Modifier = Modifier) {
-    // Do Icons or Buttons ...
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier.wrapContentSize()
+    modifier: Modifier = Modifier,
     ) {
-        Image(
-            painter = painterResource(id = cat.imageRes),
-            contentDescription = null,
-            contentScale = ContentScale.Crop,
+
+    // Fetching the Local Context
+    val mContext = LocalContext.current
+
+    // Do Icons or Buttons ...
+    Button(onClick = {
+        mContext.startActivity(Intent(mContext, CategoryActivity::class.java))
+    }) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
-                .size(64.dp)
-                .clip(CircleShape)
-        )
-        Text(
-            text = cat.text,
-            //style = MaterialTheme.typography.h4,
-            modifier = Modifier.padding(horizontal = 16.dp)
-        )
+                .wrapContentSize()
+                .background(Color.Black)
+        ) {
+            Image(
+                painter = painterResource(id = cat.imageRes),
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .size(64.dp)
+                    .clip(CircleShape)
+                    .background(Color.Black)
+            )
+            Text(
+                text = cat.text,
+                color = Color.White,
+                modifier = Modifier
+                    .padding(horizontal = 16.dp)
+                    .background(Color.Black)
+            )
+        }
     }
 }
 
@@ -180,9 +206,11 @@ fun Category(
 fun RowCategory(cat1: CategoryDescr,
                 cat2: CategoryDescr,
         ) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
+            Row(verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.background(Color(0xff111111)))
+            {
                 Category(cat1)
-                Spacer(modifier = Modifier.width(30.dp))
+                Spacer(modifier = Modifier.width(10.dp))
                 Category(cat2)
     }
 }
@@ -200,18 +228,21 @@ fun JustImage() {
 @Composable
 fun Greeting() {
     Column(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color(0xff111111)),
         horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
         val offset = Offset(5.0f, 10.0f)
         Text(text = "Vtip list",
-            color = Color.DarkGray,
+            color = Color.White,
             fontSize = 24.sp,
             textAlign = TextAlign.Center,
             modifier = Modifier
                 .fillMaxWidth()
-                .weight(1F),
+                .weight(1F)
+                .background(Color.Black),
             style = TextStyle(
                 fontSize = 24.sp,
                 shadow = Shadow(
@@ -219,9 +250,9 @@ fun Greeting() {
                 )
             )
         )
-        Spacer(modifier = Modifier.height(10.dp))
+        Spacer(modifier = Modifier.height(15.dp).background(Color.DarkGray))
         RandomJoke(modifier = Modifier.weight(6F))
-        Spacer(modifier = Modifier.height(32.dp))
+        Spacer(modifier = Modifier.height(15.dp).background(Color.Gray))
         JokeCategory(modifier = Modifier.weight(4F))
         Spacer(modifier = Modifier.height(5.dp))
     }

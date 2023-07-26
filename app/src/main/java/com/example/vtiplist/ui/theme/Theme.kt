@@ -1,5 +1,6 @@
 package com.example.vtiplist.ui.theme
 
+import android.hardware.camera2.params.BlackLevelPattern
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Shapes
@@ -13,6 +14,7 @@ private val DarkColorPalette = darkColors(
     primary = Purple200,
     primaryVariant = Purple700,
     secondary = Teal200,
+    onBackground = Color.Black
 )
 
 private val LightColorPalette = lightColors(

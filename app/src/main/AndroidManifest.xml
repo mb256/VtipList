@@ -13,6 +13,16 @@
         android:theme="@style/Theme.VtipList"
         tools:targetApi="31">
         <activity
+            android:name=".CategoryActivity"
+            android:exported="false"
+            android:label="@string/title_activity_category"
+            android:theme="@style/Theme.VtipList" />
+        <activity
+            android:name=".ui.theme.CategoryActivity"
+            android:exported="false"
+            android:label="@string/title_activity_category"
+            android:theme="@style/Theme.VtipList" />
+        <activity
             android:name=".MainActivity"
             android:exported="true"
             android:label="@string/app_name"
