@@ -7,7 +7,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -15,11 +14,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
@@ -30,7 +26,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.vtiplist.ui.theme.VtipListTheme
-import androidx.compose.foundation.lazy.items
 
 class CategoryActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -57,39 +52,21 @@ var jokes = listOf<String>(
 
 
 @Composable
-fun JokeList2(jokes: List<String>) {
-    MyUI()
-}
-
-@Composable
 fun JokeList(jokes: List<String>) {
     Column(modifier = Modifier
-        .verticalScroll(rememberScrollState())
-        .background(Color(0xff111111))
+        //.verticalScroll(rememberScrollState())
+        .background(Color.DarkGray)
     ) {
 
         Headline()
 
-        Spacer(modifier = Modifier
-            .height(15.dp)
-            .background(Color.DarkGray))
+//        Spacer(
+//            modifier = Modifier
+//                .height(15.dp)
+//                .background(Color.DarkGray)
+//        )
 
-//        jokes.forEach { joke ->
-//            JokeRow(joke)
-//        }
-
-//        /**
-//         * import androidx.compose.foundation.lazy.items
-//         */
-//        LazyColumn {
-//            items(jokes) { joke ->
-//                JokeRow(joke)
-//            }
-//        }
-
-        MyUI()
-
-
+        ListOfJokes()
     }
 }
 
@@ -135,20 +112,33 @@ fun JokeRow(joke: String) {
 
 
 @Composable
-fun MyUI() {
+fun ListOfJokes() {
     LazyColumn(
-        verticalArrangement = Arrangement.spacedBy(space = 8.dp)
+        verticalArrangement = Arrangement.spacedBy(space = 8.dp),
+        modifier = Modifier
+            .padding(all = 5.dp)
+            .fillMaxWidth()
     ) {
-        item {
-            Text(text = "First Item")
+        item() {
+            Text(text = "Category XY",
+                color = Color.White,
+                fontSize = 24.sp,
+                textAlign = TextAlign.Center,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(Color.Black)
+                    .padding(all = 5.dp)
+            )
         }
 
-        items(count = 14) { countValue ->
-            Text(text = "Items: $countValue")
-        }
-
-        item {
-            Text(text = "Last Item")
+        items(count = 25) { countValue ->
+            Text(text = "Items: $countValue \nbla bla bla ...",
+                color = Color.White,
+                fontSize = 20.sp,
+                textAlign = TextAlign.Start,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(Color.Black))
         }
     }
 }
@@ -162,13 +152,5 @@ fun MyUI() {
 fun JokeListPreview() {
     VtipListTheme {
         JokeList(jokes)
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun JokeList2Preview() {
-    VtipListTheme {
-        JokeList2(jokes)
     }
 }

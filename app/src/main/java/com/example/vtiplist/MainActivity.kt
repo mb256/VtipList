@@ -2,13 +2,15 @@ package com.example.vtiplist
 
 import android.content.Intent
 import android.os.Bundle
-import android.service.autofill.OnClickAction
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.annotation.DrawableRes
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
+import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
@@ -18,7 +20,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shadow
@@ -64,7 +65,9 @@ fun RandomJoke(modifier: Modifier) {
                 .fillMaxWidth()
                 .background(Color.Black)
         )
-        Spacer(modifier = Modifier.height(5.dp).background(Color.Gray))
+        Spacer(modifier = Modifier
+            .height(5.dp)
+            .background(Color.Gray))
         Text(
             text = "Tri gracie prijdou do baru ... a bla \n" +
                     "bla bla bla bla ...\n" +
@@ -136,8 +139,11 @@ data class CategoryDescr(
 fun JokeCategory(modifier: Modifier) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        //modifier = Modifier.wrapContentHeight()
-        modifier = modifier.background(Color(0xff111111))
+        modifier = modifier
+            //.background(Color(0xff111111))
+            .background(Color.LightGray)
+            //.wrapContentHeight()
+            .fillMaxSize()
     )
     {
 
@@ -151,8 +157,8 @@ fun JokeCategory(modifier: Modifier) {
         )
         Spacer(modifier = Modifier.height(5.dp))
 
-        val cat1 = CategoryDescr(R.drawable.figure, "Kategorie 1")
-        val cat2 = CategoryDescr(R.drawable.body_shape, "Kategorie 2")
+        val cat1 = CategoryDescr(R.drawable.figure, "Kat. 1")
+        val cat2 = CategoryDescr(R.drawable.body_shape, "Kat 2")
         RowCategory(cat1, cat2)
         Spacer(modifier = Modifier.height(5.dp))
         RowCategory(cat1, cat2)
@@ -163,10 +169,40 @@ fun JokeCategory(modifier: Modifier) {
 }
 
 
+val myListItems = listOf<String>(
+    "One", "Two", "Three", "Four", "Five", "Six"
+)
+
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+fun CategoryGrid() {
+    LazyVerticalStaggeredGrid(
+        columns = StaggeredGridCells.Fixed(2),
+        //verticalItemSpacing = 4.dp,
+        horizontalArrangement = Arrangement.spacedBy(4.dp),
+        content = {
+            items(myListItems.size) { item ->
+                Text(
+                    text = "Items: $item ...",
+                    color = Color.White,
+                    fontSize = 20.sp,
+                    textAlign = TextAlign.Start,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(Color.Black)
+                )
+            }
+        },
+        modifier = Modifier.fillMaxSize()
+    )
+}
+
 @Composable
 fun Category(
     cat: CategoryDescr,
-    modifier: Modifier = Modifier,
+    modifier: Modifier = Modifier
+        .fillMaxWidth()
+        .background(Color.Green)
     ) {
 
     // Fetching the Local Context
@@ -175,11 +211,12 @@ fun Category(
     // Do Icons or Buttons ...
     Button(onClick = {
         mContext.startActivity(Intent(mContext, CategoryActivity::class.java))
-    }) {
+    }
+        ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
-                .wrapContentSize()
+                //.wrapContentSize()
                 .background(Color.Black)
         ) {
             Image(
@@ -187,15 +224,17 @@ fun Category(
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
-                    .size(64.dp)
+                    //.size(64.dp)
+                    .size(96.dp)
                     .clip(CircleShape)
                     .background(Color.Black)
             )
             Text(
                 text = cat.text,
+                fontSize = 16.sp,
                 color = Color.White,
                 modifier = Modifier
-                    .padding(horizontal = 16.dp)
+                    //.padding(horizontal = 16.dp)
                     .background(Color.Black)
             )
         }
@@ -207,11 +246,13 @@ fun RowCategory(cat1: CategoryDescr,
                 cat2: CategoryDescr,
         ) {
             Row(verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.background(Color(0xff111111)))
+            modifier = Modifier
+                .background(Color(0xff111111))
+                .fillMaxWidth())
             {
-                Category(cat1)
+                Category(cat1, modifier = Modifier.weight(1F))
                 Spacer(modifier = Modifier.width(10.dp))
-                Category(cat2)
+                Category(cat2, modifier = Modifier.weight(1F))
     }
 }
 
@@ -250,17 +291,68 @@ fun Greeting() {
                 )
             )
         )
-        Spacer(modifier = Modifier.height(15.dp).background(Color.DarkGray))
+        Spacer(modifier = Modifier
+            .height(15.dp)
+            .background(Color.DarkGray))
         RandomJoke(modifier = Modifier.weight(6F))
-        Spacer(modifier = Modifier.height(15.dp).background(Color.Gray))
+        Spacer(modifier = Modifier
+            .height(15.dp)
+            .background(Color.DarkGray))
         JokeCategory(modifier = Modifier.weight(4F))
         Spacer(modifier = Modifier.height(5.dp))
+    }
+}
+
+@Composable
+fun CategoryRowTemp(text1: String, text2: String) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier
+            .background(Color(0xff111111))
+            .fillMaxWidth()
+    )
+    {
+        Text(text = text1,
+            fontSize = 24.sp,
+            color = Color.White,
+            modifier = Modifier.weight(1F))
+        Text(text = text2,
+            fontSize = 24.sp,
+            color = Color.White,
+            modifier = Modifier.weight(1F))
+    }
+}
+
+@Composable
+fun CategoryTemp() {
+    Column(modifier = Modifier
+        .fillMaxWidth()
+        .background(Color(0xff111111)),
+        horizontalAlignment = Alignment.CenterHorizontally
+    )
+    {
+        CategoryRowTemp("One", "Two")
+        CategoryRowTemp("Three", "Four")
+        CategoryRowTemp("Five", "Six")
     }
 }
 
 //////////////////////////////////////////////////////
 // PREVIEWS
 //////////////////////////////////////////////////////
+
+@Preview(showBackground = true)
+@Composable
+fun CategoryRowPreview() {
+    CategoryRowTemp("One", "Two")
+}
+
+@Preview(showBackground = true)
+@Composable
+fun CategoryTempPreview() {
+    CategoryTemp()
+}
+
 
 @Preview(showBackground = true)
 @Composable
@@ -300,4 +392,9 @@ fun JokeCategoryPreview() {
 @Composable
 fun JustImagePreview() {
     JustImage()
+}
+@Preview(showBackground = true)
+@Composable
+fun CategoryGridPreview() {
+    CategoryGrid()
 }
