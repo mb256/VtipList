@@ -1,13 +1,17 @@
 package com.example.vtiplist
 
 import android.content.Intent
+import android.media.midi.MidiOutputPort
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.annotation.DrawableRes
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
@@ -157,8 +161,8 @@ fun JokeCategory(modifier: Modifier) {
         )
         Spacer(modifier = Modifier.height(5.dp))
 
-        val cat1 = CategoryDescr(R.drawable.figure, "Kat. 1")
-        val cat2 = CategoryDescr(R.drawable.body_shape, "Kat 2")
+        val cat1 = CategoryDescr(R.drawable.figure, "Category 1")
+        val cat2 = CategoryDescr(R.drawable.body_shape, "Category 2")
         RowCategory(cat1, cat2)
         Spacer(modifier = Modifier.height(5.dp))
         RowCategory(cat1, cat2)
@@ -209,15 +213,16 @@ fun Category(
     val mContext = LocalContext.current
 
     // Do Icons or Buttons ...
-    Button(onClick = {
-        mContext.startActivity(Intent(mContext, CategoryActivity::class.java))
-    }
-        ) {
+//    Button(onClick = {
+//        mContext.startActivity(Intent(mContext, CategoryActivity::class.java))
+//    }
+//        ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
                 //.wrapContentSize()
                 .background(Color.Black)
+                .clickable { mContext.startActivity(Intent(mContext, CategoryActivity::class.java)) }
         ) {
             Image(
                 painter = painterResource(id = cat.imageRes),
@@ -226,7 +231,7 @@ fun Category(
                 modifier = Modifier
                     //.size(64.dp)
                     .size(96.dp)
-                    .clip(CircleShape)
+                    //.clip(CircleShape)
                     .background(Color.Black)
             )
             Text(
@@ -238,7 +243,7 @@ fun Category(
                     .background(Color.Black)
             )
         }
-    }
+    //}
 }
 
 @Composable
@@ -309,13 +314,63 @@ fun CategoryRowTemp(text1: String, text2: String) {
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
             .background(Color(0xff111111))
-            .fillMaxWidth()
+            //.fillMaxWidth()
+            .padding(0.dp)
     )
     {
-        Text(text = text1,
-            fontSize = 24.sp,
-            color = Color.White,
-            modifier = Modifier.weight(1F))
+        // Fetching the Local Context
+        val mContext = LocalContext.current
+
+        val cat1 = CategoryDescr(R.drawable.figure, "Kat. 1")
+        val cat2 = CategoryDescr(R.drawable.body_shape, "Kat 2")
+        val cat3 = CategoryDescr(R.drawable.ic_launcher_foreground, "Droid")
+
+        // Do Icons or Buttons ...
+        Button(onClick = {
+            mContext.startActivity(Intent(mContext, CategoryActivity::class.java))
+        },
+            modifier = Modifier
+                .background(Color.Black)
+                .border(
+                    BorderStroke(5.dp, Color.Yellow)
+                )
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier
+                    .wrapContentSize()
+                    .background(Color.White)
+            ) {
+                Image(
+                    painter = painterResource(id = cat3.imageRes),
+                    contentDescription = null,
+                    //contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .size(256.dp)
+                        //.size(96.dp)
+                        //.clip(CircleShape)
+                        .weight(1f)
+                        .background(Color.Black)
+                        .border(
+                            BorderStroke(5.dp, Color.Yellow),
+                            CircleShape
+                        )
+                )
+                Text(
+                    text = cat1.text,
+                    fontSize = 16.sp,
+                    color = Color.White,
+                    modifier = Modifier
+                        //.padding(horizontal = 16.dp)
+                        .weight(1f)
+                        .background(Color.Black)
+                )
+            }
+        }
+//        Text(text = text1,
+//            fontSize = 24.sp,
+//            color = Color.White,
+//            modifier = Modifier.weight(1F))
         Text(text = text2,
             fontSize = 24.sp,
             color = Color.White,
@@ -337,9 +392,74 @@ fun CategoryTemp() {
     }
 }
 
+@Composable
+fun CategoryPics() {
+    Column(modifier = Modifier
+        .fillMaxWidth()
+        .background(Color(0xff111111)),
+        horizontalAlignment = Alignment.CenterHorizontally
+    )
+    {
+        Image(
+            painter = painterResource(R.drawable.figure),
+            contentDescription = null,
+            contentScale = ContentScale.Crop,
+            modifier = Modifier
+                .size(480.dp)
+                //.size(96.dp)
+                //.clip(CircleShape)
+                .weight(1f)
+                .background(Color.Black)
+//                .border(
+//                    BorderStroke(5.dp, Color.Yellow),
+//                    CircleShape
+//                )
+        )
+        Image(
+            painter = painterResource(R.drawable.figure),
+            contentDescription = null,
+            contentScale = ContentScale.Crop,
+            modifier = Modifier
+                .size(480.dp)
+                //.size(96.dp)
+                //.clip(CircleShape)
+                .weight(1f)
+                .background(Color.Black)
+//                .border(
+//                    BorderStroke(5.dp, Color.Yellow),
+//                    CircleShape
+//                )
+        )
+        Image(
+            painter = painterResource(R.drawable.figure),
+            contentDescription = null,
+            contentScale = ContentScale.Crop,
+            modifier = Modifier
+                .size(480.dp)
+                //.size(96.dp)
+                //.clip(CircleShape)
+                .weight(1f)
+                .background(Color.Black)
+//                .border(
+//                    BorderStroke(5.dp, Color.Yellow),
+//                    CircleShape
+//                )
+        )
+    }
+}
+
+
+
 //////////////////////////////////////////////////////
 // PREVIEWS
 //////////////////////////////////////////////////////
+
+@Preview(showBackground = true)
+@Composable
+fun CategoryPicsPreview() {
+    CategoryPics()
+}
+
 
 @Preview(showBackground = true)
 @Composable
