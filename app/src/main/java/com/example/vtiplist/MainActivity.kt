@@ -1,29 +1,23 @@
 package com.example.vtiplist
 
 import android.content.Intent
-import android.media.midi.MidiOutputPort
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.annotation.DrawableRes
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.Button
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shadow
@@ -38,6 +32,18 @@ import androidx.compose.ui.unit.sp
 import com.example.vtiplist.ui.theme.VtipListTheme
 
 
+const val ARG_JOKES_CAT_LIST = "JokesCategoryList"
+//const val ARG_JOKE_CAT = "JokesCategory"
+
+var intentKeyList = listOf<String>(
+    "muzi_zeny",
+    "cerny_humor",
+    "prace",
+    "IT"
+)
+
+var jokesAll = Jokes()
+
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,7 +57,7 @@ class MainActivity : ComponentActivity() {
 
 
 @Composable
-fun RandomJoke(modifier: Modifier) {
+fun RandomJoke(modifier: Modifier, joke: Joke) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier
@@ -73,56 +79,7 @@ fun RandomJoke(modifier: Modifier) {
             .height(5.dp)
             .background(Color.Gray))
         Text(
-            text = "Tri gracie prijdou do baru ... a bla \n" +
-                    "bla bla bla bla ...\n" +
-                    "bla bla bla bla ...\n" +
-                    "bla bla bla bla ...\n" +
-                    "bla bla bla bla ...\n" +
-                    "bla bla bla bla ...\n" +
-                    "bla bla bla bla ...\n" +
-                    "bla bla bla bla ...\n" +
-                    "bla bla bla bla ...\n" +
-                    "bla bla bla bla ...\n" +
-                    "bla bla bla bla ...\n" +
-                    "bla bla bla bla ...\n" +
-                    "bla bla bla bla ...\n" +
-                    "bla bla bla bla ...\n" +
-                    "bla bla bla bla ...\n" +
-                    "bla bla bla bla ...\n" +
-                    "bla bla bla bla ...\n" +
-                    "bla bla bla bla ...\n" +
-                    "bla bla bla bla ...\n" +
-                    "bla bla bla bla ...\n" +
-                    "bla bla bla bla ...\n" +
-                    "bla bla bla bla ...\n" +
-                    "bla bla bla bla ...\n" +
-                    "bla bla bla bla ...\n" +
-                    "bla bla bla bla ...\n" +
-                    "bla bla bla bla ...\n" +
-                    "bla bla bla bla ...\n" +
-                    "bla bla bla bla ...\n" +
-                    "bla bla bla bla ...\n" +
-                    "bla bla bla bla ...\n" +
-                    "bla bla bla bla ...\n" +
-                    "bla bla bla bla ...\n" +
-                    "bla bla bla bla ...\n" +
-                    "bla bla bla bla ...\n" +
-                    "bla bla bla bla ...\n" +
-                    "bla bla bla bla ...\n" +
-                    "bla bla bla bla ...\n" +
-                    "bla bla bla bla ...\n" +
-                    "bla bla bla bla ...\n" +
-                    "bla bla bla bla ...\n" +
-                    "bla bla bla bla ...\n" +
-                    "bla bla bla bla ...\n" +
-                    "bla bla bla bla ...\n" +
-                    "bla bla bla bla ...\n" +
-                    "bla bla bla bla ...\n" +
-                    "bla bla bla bla ...\n" +
-                    "bla bla bla bla ...\n" +
-                    "bla bla bla bla ...\n" +
-                    "bla bla bla bla ...\n" +
-                    "bla bla bla bla ...",
+            text = joke.jokeText,
             textAlign = TextAlign.Center,
             color = Color.White,
             modifier = Modifier
@@ -136,21 +93,21 @@ fun RandomJoke(modifier: Modifier) {
 
 data class CategoryDescr(
     @DrawableRes val imageRes: Int,
-    val text: String
+    val text: String,
+    val jokeList: List<Joke>
 )
 
 @Composable
-fun JokeCategory(modifier: Modifier) {
+fun JokeCategory(modifier: Modifier, jokes: Jokes) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier
-            //.background(Color(0xff111111))
-            .background(Color.LightGray)
+            .background(Color(0xff111111))
+            //.background(Color.DarkGray)
             //.wrapContentHeight()
             .fillMaxSize()
     )
     {
-
         Text(text = "Kategorie vtipů:",
             textAlign = TextAlign.Center,
             fontSize = 14.sp,
@@ -161,14 +118,16 @@ fun JokeCategory(modifier: Modifier) {
         )
         Spacer(modifier = Modifier.height(5.dp))
 
-        val cat1 = CategoryDescr(R.drawable.figure, "Category 1")
-        val cat2 = CategoryDescr(R.drawable.body_shape, "Category 2")
+        val cat1 = CategoryDescr(R.drawable.figure, "Muži a ženy", jokes.getCategoryJokes(intentKeyList[0]))
+        val cat2 = CategoryDescr(R.drawable.figure, "Černý humor", jokes.getCategoryJokes(intentKeyList[1]))
+        val cat3 = CategoryDescr(R.drawable.figure, "Práce", jokes.getCategoryJokes(intentKeyList[2]))
+        val cat4 = CategoryDescr(R.drawable.figure, "IT", jokes.getCategoryJokes(intentKeyList[3]))
         RowCategory(cat1, cat2)
         Spacer(modifier = Modifier.height(5.dp))
-        RowCategory(cat1, cat2)
+        RowCategory(cat3, cat4)
         Spacer(modifier = Modifier.height(5.dp))
-        RowCategory(cat1, cat2)
-        Spacer(modifier = Modifier.height(5.dp))
+//        RowCategory(cat1, cat2)
+//        Spacer(modifier = Modifier.height(5.dp))
     }
 }
 
@@ -206,23 +165,30 @@ fun Category(
     cat: CategoryDescr,
     modifier: Modifier = Modifier
         .fillMaxWidth()
-        .background(Color.Green)
+        .background(Color.DarkGray)
     ) {
 
     // Fetching the Local Context
     val mContext = LocalContext.current
 
-    // Do Icons or Buttons ...
-//    Button(onClick = {
-//        mContext.startActivity(Intent(mContext, CategoryActivity::class.java))
-//    }
-//        ) {
+    val intent = Intent(mContext, CategoryActivity::class.java)
+    //intent.putExtra(intentKeyList[0], intentKeyList[0])
+    intent.putExtra(ARG_JOKES_CAT_LIST, cat.jokeList[0].jokeCategory)
+
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
                 //.wrapContentSize()
                 .background(Color.Black)
-                .clickable { mContext.startActivity(Intent(mContext, CategoryActivity::class.java)) }
+                .clickable {
+                    mContext.startActivity(
+//                        Intent(
+//                            mContext,
+//                            CategoryActivity::class.java
+//                        )
+                        intent
+                    )
+                }
         ) {
             Image(
                 painter = painterResource(id = cat.imageRes),
@@ -243,13 +209,13 @@ fun Category(
                     .background(Color.Black)
             )
         }
-    //}
 }
 
 @Composable
-fun RowCategory(cat1: CategoryDescr,
-                cat2: CategoryDescr,
-        ) {
+fun RowCategory(
+    cat1: CategoryDescr,
+    cat2: CategoryDescr,
+) {
             Row(verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
                 .background(Color(0xff111111))
@@ -273,6 +239,10 @@ fun JustImage() {
 
 @Composable
 fun Greeting() {
+
+    //val jokesAll = Jokes()
+    val randomJoke = jokesAll.getRandomJoke()
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -299,180 +269,19 @@ fun Greeting() {
         Spacer(modifier = Modifier
             .height(15.dp)
             .background(Color.DarkGray))
-        RandomJoke(modifier = Modifier.weight(6F))
+        RandomJoke(modifier = Modifier.weight(6F), randomJoke)
         Spacer(modifier = Modifier
             .height(15.dp)
             .background(Color.DarkGray))
-        JokeCategory(modifier = Modifier.weight(4F))
+        JokeCategory(modifier = Modifier.weight(4F), jokesAll)
         Spacer(modifier = Modifier.height(5.dp))
     }
 }
-
-@Composable
-fun CategoryRowTemp(text1: String, text2: String) {
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier
-            .background(Color(0xff111111))
-            //.fillMaxWidth()
-            .padding(0.dp)
-    )
-    {
-        // Fetching the Local Context
-        val mContext = LocalContext.current
-
-        val cat1 = CategoryDescr(R.drawable.figure, "Kat. 1")
-        val cat2 = CategoryDescr(R.drawable.body_shape, "Kat 2")
-        val cat3 = CategoryDescr(R.drawable.ic_launcher_foreground, "Droid")
-
-        // Do Icons or Buttons ...
-        Button(onClick = {
-            mContext.startActivity(Intent(mContext, CategoryActivity::class.java))
-        },
-            modifier = Modifier
-                .background(Color.Black)
-                .border(
-                    BorderStroke(5.dp, Color.Yellow)
-                )
-        ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier
-                    .wrapContentSize()
-                    .background(Color.White)
-            ) {
-                Image(
-                    painter = painterResource(id = cat3.imageRes),
-                    contentDescription = null,
-                    //contentScale = ContentScale.Crop,
-                    modifier = Modifier
-                        .size(256.dp)
-                        //.size(96.dp)
-                        //.clip(CircleShape)
-                        .weight(1f)
-                        .background(Color.Black)
-                        .border(
-                            BorderStroke(5.dp, Color.Yellow),
-                            CircleShape
-                        )
-                )
-                Text(
-                    text = cat1.text,
-                    fontSize = 16.sp,
-                    color = Color.White,
-                    modifier = Modifier
-                        //.padding(horizontal = 16.dp)
-                        .weight(1f)
-                        .background(Color.Black)
-                )
-            }
-        }
-//        Text(text = text1,
-//            fontSize = 24.sp,
-//            color = Color.White,
-//            modifier = Modifier.weight(1F))
-        Text(text = text2,
-            fontSize = 24.sp,
-            color = Color.White,
-            modifier = Modifier.weight(1F))
-    }
-}
-
-@Composable
-fun CategoryTemp() {
-    Column(modifier = Modifier
-        .fillMaxWidth()
-        .background(Color(0xff111111)),
-        horizontalAlignment = Alignment.CenterHorizontally
-    )
-    {
-        CategoryRowTemp("One", "Two")
-        CategoryRowTemp("Three", "Four")
-        CategoryRowTemp("Five", "Six")
-    }
-}
-
-@Composable
-fun CategoryPics() {
-    Column(modifier = Modifier
-        .fillMaxWidth()
-        .background(Color(0xff111111)),
-        horizontalAlignment = Alignment.CenterHorizontally
-    )
-    {
-        Image(
-            painter = painterResource(R.drawable.figure),
-            contentDescription = null,
-            contentScale = ContentScale.Crop,
-            modifier = Modifier
-                .size(480.dp)
-                //.size(96.dp)
-                //.clip(CircleShape)
-                .weight(1f)
-                .background(Color.Black)
-//                .border(
-//                    BorderStroke(5.dp, Color.Yellow),
-//                    CircleShape
-//                )
-        )
-        Image(
-            painter = painterResource(R.drawable.figure),
-            contentDescription = null,
-            contentScale = ContentScale.Crop,
-            modifier = Modifier
-                .size(480.dp)
-                //.size(96.dp)
-                //.clip(CircleShape)
-                .weight(1f)
-                .background(Color.Black)
-//                .border(
-//                    BorderStroke(5.dp, Color.Yellow),
-//                    CircleShape
-//                )
-        )
-        Image(
-            painter = painterResource(R.drawable.figure),
-            contentDescription = null,
-            contentScale = ContentScale.Crop,
-            modifier = Modifier
-                .size(480.dp)
-                //.size(96.dp)
-                //.clip(CircleShape)
-                .weight(1f)
-                .background(Color.Black)
-//                .border(
-//                    BorderStroke(5.dp, Color.Yellow),
-//                    CircleShape
-//                )
-        )
-    }
-}
-
 
 
 //////////////////////////////////////////////////////
 // PREVIEWS
 //////////////////////////////////////////////////////
-
-@Preview(showBackground = true)
-@Composable
-fun CategoryPicsPreview() {
-    CategoryPics()
-}
-
-
-@Preview(showBackground = true)
-@Composable
-fun CategoryRowPreview() {
-    CategoryRowTemp("One", "Two")
-}
-
-@Preview(showBackground = true)
-@Composable
-fun CategoryTempPreview() {
-    CategoryTemp()
-}
-
 
 @Preview(showBackground = true)
 @Composable
@@ -485,36 +294,37 @@ fun DefaultPreview() {
 @Preview(showBackground = true)
 @Composable
 fun RandomJokePreview() {
-    RandomJoke(modifier = Modifier.wrapContentHeight())
+    val jokeList = Jokes()
+    val randomJoke = jokeList.getRandomJoke()
+    RandomJoke(modifier = Modifier.wrapContentHeight(), randomJoke)
 }
 
 @Preview
 @Composable
-fun CategoryPreview() {
-    val cat1 = CategoryDescr(R.drawable.figure, "Kategorie 1")
-    Category(cat1)
+fun JokeCategoryPreview() {
+    val jokesAll = Jokes()
+    JokeCategory(modifier = Modifier.wrapContentSize(), jokesAll)
 }
 
 @Preview
 @Composable
 fun RowCategoryPreview() {
-    val cat1 = CategoryDescr(R.drawable.figure, "Kategorie 1")
-    val cat2 = CategoryDescr(R.drawable.body_shape, "Kategorie 2")
+    val jokes = Jokes()
+    val cat1 = CategoryDescr(R.drawable.figure, "Muži a ženy", jokes.getCategoryJokes(intentKeyList[0]))
+    val cat2 = CategoryDescr(R.drawable.figure, "Černý humor", jokes.getCategoryJokes(intentKeyList[1]))
     RowCategory(cat1, cat2)
+}
+
+@Preview
+@Composable
+fun CategoryPreview() {
+    val jokes = Jokes()
+    val cat1 = CategoryDescr(R.drawable.figure, "Muži a ženy", jokes.getCategoryJokes(intentKeyList[0]))
+    Category(cat1)
 }
 
 @Preview(showBackground = true)
 @Composable
-fun JokeCategoryPreview() {
-    JokeCategory(modifier = Modifier.wrapContentHeight())
-}
-@Preview(showBackground = true)
-@Composable
 fun JustImagePreview() {
     JustImage()
-}
-@Preview(showBackground = true)
-@Composable
-fun CategoryGridPreview() {
-    CategoryGrid()
 }

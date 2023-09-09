@@ -32,7 +32,18 @@ class CategoryActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             VtipListTheme {
-                JokeList(jokes)
+                val localIntent = intent
+                val categoryString = localIntent.getStringExtra(ARG_JOKES_CAT_LIST)
+                val jokeList : List<Joke>
+
+                if (categoryString != null) {
+                    jokeList = jokesAll.getCategoryJokes(categoryString)
+                }
+                else {
+                    jokeList = listOf()
+                }
+
+                JokeList(jokeList)
             }
         }
     }
@@ -52,21 +63,13 @@ var jokes = listOf<String>(
 
 
 @Composable
-fun JokeList(jokes: List<String>) {
+fun JokeList(jokeList: List<Joke>) {
+
     Column(modifier = Modifier
-        //.verticalScroll(rememberScrollState())
         .background(Color.DarkGray)
     ) {
-
         Headline()
-
-//        Spacer(
-//            modifier = Modifier
-//                .height(15.dp)
-//                .background(Color.DarkGray)
-//        )
-
-        ListOfJokes()
+        ListOfJokes(jokeList)
     }
 }
 
@@ -81,7 +84,6 @@ fun Headline(modifier: Modifier = Modifier) {
         textAlign = TextAlign.Center,
         modifier = Modifier
             .fillMaxWidth()
-            //.weight(1F)
             .background(Color.Black),
         style = TextStyle(
             fontSize = 24.sp,
@@ -112,7 +114,7 @@ fun JokeRow(joke: String) {
 
 
 @Composable
-fun ListOfJokes() {
+fun ListOfJokes(jokeList : List<Joke>) {
     LazyColumn(
         verticalArrangement = Arrangement.spacedBy(space = 8.dp),
         modifier = Modifier
@@ -120,7 +122,7 @@ fun ListOfJokes() {
             .fillMaxWidth()
     ) {
         item() {
-            Text(text = "Category XY",
+            Text(text = jokeList[0].jokeCategory,
                 color = Color.White,
                 fontSize = 24.sp,
                 textAlign = TextAlign.Center,
@@ -143,6 +145,14 @@ fun ListOfJokes() {
     }
 }
 
+// An Example of LazyColumn ...
+//LazyColumn {
+//    items(messages) { message ->
+//        MessageRow(message)
+//    }
+
+
+
 /////////////////////////////////////////
 // PREVIEWS
 /////////////////////////////////////////
@@ -151,6 +161,7 @@ fun ListOfJokes() {
 @Composable
 fun JokeListPreview() {
     VtipListTheme {
-        JokeList(jokes)
+        val jokeList = jokesAll.getCategoryJokes(intentKeyList[0])
+        JokeList(jokeList)
     }
 }
