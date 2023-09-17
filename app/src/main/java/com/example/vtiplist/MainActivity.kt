@@ -5,19 +5,28 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.annotation.DrawableRes
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
-import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shadow
@@ -33,16 +42,22 @@ import com.example.vtiplist.ui.theme.VtipListTheme
 
 
 const val ARG_JOKES_CAT_LIST = "JokesCategoryList"
-//const val ARG_JOKE_CAT = "JokesCategory"
 
-var intentKeyList = listOf<String>(
+val categoryList = listOf<String>(
     "muzi_zeny",
     "cerny_humor",
     "prace",
     "IT"
 )
 
-var jokesAll = Jokes()
+val categoryMapText = mapOf(
+    categoryList[0] to "Muži a ženy",
+    categoryList[1] to "Černý humor",
+    categoryList[2] to "Práce",
+    categoryList[3] to "IT",
+)
+
+val jokesAll = Jokes()
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -68,24 +83,27 @@ fun RandomJoke(modifier: Modifier, joke: Joke) {
     ) {
         Text(
             text = "Náhodný vtip: ",
-            fontSize = 14.sp,
+            fontSize = 20.sp,
             color = Color.White,
             textAlign = TextAlign.Center,
             modifier = Modifier
                 .fillMaxWidth()
                 .background(Color.Black)
+                .padding(all = 10.dp)
         )
         Spacer(modifier = Modifier
-            .height(5.dp)
+            .height(10.dp)
             .background(Color.Gray))
         Text(
             text = joke.jokeText,
+            fontSize = 18.sp,
             textAlign = TextAlign.Center,
             color = Color.White,
             modifier = Modifier
                 .fillMaxWidth()
                 .background(Color.Black)
                 .verticalScroll(state = rememberScrollState())
+                .padding(all = 20.dp)
         )
     }
 }
@@ -93,7 +111,7 @@ fun RandomJoke(modifier: Modifier, joke: Joke) {
 
 data class CategoryDescr(
     @DrawableRes val imageRes: Int,
-    val text: String,
+    val category: String,
     val jokeList: List<Joke>
 )
 
@@ -103,28 +121,26 @@ fun JokeCategory(modifier: Modifier, jokes: Jokes) {
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier
             .background(Color(0xff111111))
-            //.background(Color.DarkGray)
-            //.wrapContentHeight()
-            .fillMaxSize()
+            .fillMaxWidth()
     )
     {
         Text(text = "Kategorie vtipů:",
             textAlign = TextAlign.Center,
-            fontSize = 14.sp,
+            fontSize = 20.sp,
             color = Color.White,
             modifier = Modifier
                 .fillMaxWidth()
                 .background(Color.Black)
         )
-        Spacer(modifier = Modifier.height(5.dp))
+        Spacer(modifier = Modifier.height(10.dp))
 
-        val cat1 = CategoryDescr(R.drawable.figure, "Muži a ženy", jokes.getCategoryJokes(intentKeyList[0]))
-        val cat2 = CategoryDescr(R.drawable.figure, "Černý humor", jokes.getCategoryJokes(intentKeyList[1]))
-        val cat3 = CategoryDescr(R.drawable.figure, "Práce", jokes.getCategoryJokes(intentKeyList[2]))
-        val cat4 = CategoryDescr(R.drawable.figure, "IT", jokes.getCategoryJokes(intentKeyList[3]))
-        RowCategory(cat1, cat2)
-        Spacer(modifier = Modifier.height(5.dp))
-        RowCategory(cat3, cat4)
+        val cat1 = CategoryDescr(R.drawable.figure, categoryList[0], jokes.getCategoryJokes(categoryList[0]))
+        val cat2 = CategoryDescr(R.drawable.figure, categoryList[1], jokes.getCategoryJokes(categoryList[1]))
+        val cat3 = CategoryDescr(R.drawable.figure, categoryList[2], jokes.getCategoryJokes(categoryList[2]))
+        val cat4 = CategoryDescr(R.drawable.figure, categoryList[3], jokes.getCategoryJokes(categoryList[3]))
+        RowCategory(Modifier.fillMaxWidth(), cat1, cat2)
+        Spacer(modifier = Modifier.height(10.dp))
+        RowCategory(Modifier.fillMaxWidth(), cat3, cat4)
         Spacer(modifier = Modifier.height(5.dp))
 //        RowCategory(cat1, cat2)
 //        Spacer(modifier = Modifier.height(5.dp))
@@ -132,60 +148,21 @@ fun JokeCategory(modifier: Modifier, jokes: Jokes) {
 }
 
 
-val myListItems = listOf<String>(
-    "One", "Two", "Three", "Four", "Five", "Six"
-)
-
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun CategoryGrid() {
-    LazyVerticalStaggeredGrid(
-        columns = StaggeredGridCells.Fixed(2),
-        //verticalItemSpacing = 4.dp,
-        horizontalArrangement = Arrangement.spacedBy(4.dp),
-        content = {
-            items(myListItems.size) { item ->
-                Text(
-                    text = "Items: $item ...",
-                    color = Color.White,
-                    fontSize = 20.sp,
-                    textAlign = TextAlign.Start,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .background(Color.Black)
-                )
-            }
-        },
-        modifier = Modifier.fillMaxSize()
-    )
-}
-
-@Composable
-fun Category(
-    cat: CategoryDescr,
-    modifier: Modifier = Modifier
-        .fillMaxWidth()
-        .background(Color.DarkGray)
-    ) {
+fun Category(cat: CategoryDescr, modifier : Modifier) {
 
     // Fetching the Local Context
     val mContext = LocalContext.current
 
     val intent = Intent(mContext, CategoryActivity::class.java)
-    //intent.putExtra(intentKeyList[0], intentKeyList[0])
-    intent.putExtra(ARG_JOKES_CAT_LIST, cat.jokeList[0].jokeCategory)
+    intent.putExtra(ARG_JOKES_CAT_LIST, cat.category)
 
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier
-                //.wrapContentSize()
+            modifier = modifier
                 .background(Color.Black)
                 .clickable {
                     mContext.startActivity(
-//                        Intent(
-//                            mContext,
-//                            CategoryActivity::class.java
-//                        )
                         intent
                     )
                 }
@@ -197,15 +174,15 @@ fun Category(
                 modifier = Modifier
                     //.size(64.dp)
                     .size(96.dp)
-                    //.clip(CircleShape)
+                    .clip(CircleShape)
                     .background(Color.Black)
             )
             Text(
-                text = cat.text,
-                fontSize = 16.sp,
+                text = categoryMapText[cat.category]!!,
+                fontSize = 20.sp,
                 color = Color.White,
                 modifier = Modifier
-                    //.padding(horizontal = 16.dp)
+                    .padding(all = 10.dp)
                     .background(Color.Black)
             )
         }
@@ -213,6 +190,7 @@ fun Category(
 
 @Composable
 fun RowCategory(
+    modifier: Modifier = Modifier.fillMaxWidth(),
     cat1: CategoryDescr,
     cat2: CategoryDescr,
 ) {
@@ -239,8 +217,6 @@ fun JustImage() {
 
 @Composable
 fun Greeting() {
-
-    //val jokesAll = Jokes()
     val randomJoke = jokesAll.getRandomJoke()
 
     Column(
@@ -310,17 +286,17 @@ fun JokeCategoryPreview() {
 @Composable
 fun RowCategoryPreview() {
     val jokes = Jokes()
-    val cat1 = CategoryDescr(R.drawable.figure, "Muži a ženy", jokes.getCategoryJokes(intentKeyList[0]))
-    val cat2 = CategoryDescr(R.drawable.figure, "Černý humor", jokes.getCategoryJokes(intentKeyList[1]))
-    RowCategory(cat1, cat2)
+    val cat1 = CategoryDescr(R.drawable.figure, categoryList[0], jokes.getCategoryJokes(categoryList[0]))
+    val cat2 = CategoryDescr(R.drawable.figure, categoryList[1], jokes.getCategoryJokes(categoryList[1]))
+    RowCategory(Modifier.fillMaxWidth(), cat1, cat2)
 }
 
 @Preview
 @Composable
 fun CategoryPreview() {
     val jokes = Jokes()
-    val cat1 = CategoryDescr(R.drawable.figure, "Muži a ženy", jokes.getCategoryJokes(intentKeyList[0]))
-    Category(cat1)
+    val cat1 = CategoryDescr(R.drawable.figure, categoryList[0], jokes.getCategoryJokes(categoryList[0]))
+    Category(cat1, Modifier.fillMaxWidth())
 }
 
 @Preview(showBackground = true)
