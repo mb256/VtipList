@@ -24,6 +24,10 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -217,6 +221,10 @@ fun JustImage() {
 
 @Composable
 fun Greeting() {
+
+    //var randomJokeIndex by remember { mutableStateOf(0)}
+    //add getRandomJokeIndex() method in JokesAll class ...
+    // Add button for another Joke and regenerate another randomIndex and re-compose UI
     val randomJoke = jokesAll.getRandomJoke()
 
     Column(
