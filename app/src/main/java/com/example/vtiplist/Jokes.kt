@@ -29,13 +29,9 @@ class Jokes {
         return jokeLists.filter { it.jokeCategory == requiredCategory }
     }
 
-
-//    val categoryList = listOf<String>(
-//        "muzi_zeny",
-//        "cerny_humor",
-//        "prace",
-//        "IT"
-//    )
+    fun getJokesSize() : Int {
+        return jokeLists.size
+    }
 
     val jokeLists = listOf<Joke>(
         Joke("Můj ex mě chtěl ztrapnit před svými kamarády...\n" +

@@ -19,8 +19,10 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -43,6 +45,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.vtiplist.ui.theme.VtipListTheme
+import kotlin.random.Random
 
 
 const val ARG_JOKES_CAT_LIST = "JokesCategoryList"
@@ -76,7 +79,12 @@ class MainActivity : ComponentActivity() {
 
 
 @Composable
-fun RandomJoke(modifier: Modifier, joke: Joke) {
+fun RandomJoke(modifier: Modifier) {
+
+    var randomJokeIndex by remember { mutableStateOf(0)}
+    randomJokeIndex = Random.nextInt(0, jokesAll.getJokesSize())
+    var jokeText = jokesAll.jokeLists.get(randomJokeIndex).jokeText
+
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier
@@ -85,21 +93,48 @@ fun RandomJoke(modifier: Modifier, joke: Joke) {
             //.heightIn(0.dp, 300.dp) //mention max height here
             //.height(500.dp)
     ) {
-        Text(
-            text = "Náhodný vtip: ",
-            fontSize = 20.sp,
-            color = Color.White,
-            textAlign = TextAlign.Center,
+        Row(verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
-                .fillMaxWidth()
-                .background(Color.Black)
-                .padding(all = 10.dp)
-        )
+                .background(Color(0xff111111))
+                .fillMaxWidth()) {
+            Text(text = "",
+                fontSize = 20.sp,
+                modifier = Modifier
+                    .background(Color.Black)
+                    .padding(all = 10.dp)
+                    .weight(1F))
+            Text(
+                text = "Náhodný vtip: ",
+                fontSize = 20.sp,
+                color = Color.White,
+                textAlign = TextAlign.Center,
+                modifier = Modifier
+                    //.fillMaxWidth()
+                    .background(Color.Black)
+                    .padding(all = 10.dp)
+                    .weight(2F)
+            )
+            Text(
+                text = "Další vtip",
+                fontSize = 14.sp,
+                color = Color.White,
+                textAlign = TextAlign.Right,
+                modifier = Modifier
+                    //.fillMaxWidth()
+                    .wrapContentWidth()
+                    .background(Color.DarkGray)
+                    .padding(all = 10.dp)
+                    .weight(1F)
+                    .clickable {
+                        randomJokeIndex = Random.nextInt(0, jokesAll.getJokesSize())
+                    }
+            )
+        }
         Spacer(modifier = Modifier
             .height(10.dp)
             .background(Color.Gray))
         Text(
-            text = joke.jokeText,
+            text = jokeText,
             fontSize = 18.sp,
             textAlign = TextAlign.Center,
             color = Color.White,
@@ -222,10 +257,11 @@ fun JustImage() {
 @Composable
 fun Greeting() {
 
-    //var randomJokeIndex by remember { mutableStateOf(0)}
-    //add getRandomJokeIndex() method in JokesAll class ...
-    // Add button for another Joke and regenerate another randomIndex and re-compose UI
-    val randomJoke = jokesAll.getRandomJoke()
+//    var randomJokeIndex by remember { mutableStateOf(0)}
+//    //add getRandomJokeIndex() method in JokesAll class ...
+//    // Add button for another Joke and regenerate another randomIndex and re-compose UI
+//    randomJokeIndex = Random.nextInt(0, jokesAll.getJokesSize())
+//    //val randomJoke = jokesAll.jokeLists.get(randomJokeIndex)
 
     Column(
         modifier = Modifier
@@ -253,7 +289,7 @@ fun Greeting() {
         Spacer(modifier = Modifier
             .height(15.dp)
             .background(Color.DarkGray))
-        RandomJoke(modifier = Modifier.weight(6F), randomJoke)
+        RandomJoke(modifier = Modifier.weight(6F))
         Spacer(modifier = Modifier
             .height(15.dp)
             .background(Color.DarkGray))
@@ -280,7 +316,8 @@ fun DefaultPreview() {
 fun RandomJokePreview() {
     val jokeList = Jokes()
     val randomJoke = jokeList.getRandomJoke()
-    RandomJoke(modifier = Modifier.wrapContentHeight(), randomJoke)
+    val index = Random.nextInt(0, jokesAll.getJokesSize())
+    RandomJoke(modifier = Modifier.wrapContentHeight())
 }
 
 @Preview
