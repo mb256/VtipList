@@ -81,8 +81,9 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun RandomJoke(modifier: Modifier) {
 
-    var randomJokeIndex by remember { mutableStateOf(0)}
-    randomJokeIndex = Random.nextInt(0, jokesAll.getJokesSize())
+    var randomJokeIndex by remember { mutableStateOf(
+        (0..jokesAll.getJokesSize()).random())
+    }
     var jokeText = jokesAll.jokeLists.get(randomJokeIndex).jokeText
 
     Column(
@@ -257,12 +258,6 @@ fun JustImage() {
 @Composable
 fun Greeting() {
 
-//    var randomJokeIndex by remember { mutableStateOf(0)}
-//    //add getRandomJokeIndex() method in JokesAll class ...
-//    // Add button for another Joke and regenerate another randomIndex and re-compose UI
-//    randomJokeIndex = Random.nextInt(0, jokesAll.getJokesSize())
-//    //val randomJoke = jokesAll.jokeLists.get(randomJokeIndex)
-
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -316,7 +311,8 @@ fun DefaultPreview() {
 fun RandomJokePreview() {
     val jokeList = Jokes()
     val randomJoke = jokeList.getRandomJoke()
-    val index = Random.nextInt(0, jokesAll.getJokesSize())
+    //val index = Random.nextInt(0, jokesAll.getJokesSize())
+    val index = (0..jokesAll.getJokesSize()).random()
     RandomJoke(modifier = Modifier.wrapContentHeight())
 }
 
