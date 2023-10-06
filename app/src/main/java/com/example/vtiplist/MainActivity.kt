@@ -8,6 +8,7 @@ import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -24,6 +25,8 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.Button
+import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Text
 import androidx.compose.material3.ElevatedButton
 import androidx.compose.runtime.Composable
@@ -91,53 +94,35 @@ fun RandomJoke(modifier: Modifier) {
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier
             .fillMaxWidth()
-            //.wrapContentHeight()
-            //.heightIn(0.dp, 300.dp) //mention max height here
-            //.height(500.dp)
     ) {
-        Row(verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier
-                .background(Color(0xff111111))
-                .fillMaxWidth()) {
-            Text(text = "",
-                fontSize = 20.sp,
-                modifier = Modifier
-                    .background(Color.Black)
-                    .padding(all = 10.dp)
-                    .weight(1F))
+
+        Box (contentAlignment = Alignment.CenterEnd) {
             Text(
                 text = "Náhodný vtip: ",
                 fontSize = 20.sp,
                 color = Color.White,
                 textAlign = TextAlign.Center,
                 modifier = Modifier
-                    //.fillMaxWidth()
+                    .fillMaxWidth()
                     .background(Color.Black)
                     .padding(all = 10.dp)
-                    .weight(2F)
             )
 
-            ElevatedButton(onClick = { randomJokeIndex = Random.nextInt(0, jokesAll.getJokesSize()) }) {
+            val mainButtonColor = ButtonDefaults.buttonColors(
+                backgroundColor = Color.DarkGray,
+                contentColor = Color.White
+            )
+            Button(
+                colors = mainButtonColor,
+                onClick = {
+                    randomJokeIndex = Random.nextInt(0, jokesAll.getJokesSize()) }
+
+            ) {
                 Text("Další vtip")
             }
 
-
-//            Text(
-//                text = "Další vtip",
-//                fontSize = 14.sp,
-//                color = Color.White,
-//                textAlign = TextAlign.Right,
-//                modifier = Modifier
-//                    //.fillMaxWidth()
-//                    .wrapContentWidth()
-//                    .background(Color.DarkGray)
-//                    .padding(all = 10.dp)
-//                    .weight(1F)
-//                    .clickable {
-//                        randomJokeIndex = Random.nextInt(0, jokesAll.getJokesSize())
-//                    }
-//            )
         }
+
         Spacer(modifier = Modifier
             .height(10.dp)
             .background(Color.Gray))
