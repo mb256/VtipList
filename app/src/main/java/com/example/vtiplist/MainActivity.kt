@@ -25,6 +25,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Text
+import androidx.compose.material3.ElevatedButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -115,21 +116,27 @@ fun RandomJoke(modifier: Modifier) {
                     .padding(all = 10.dp)
                     .weight(2F)
             )
-            Text(
-                text = "Další vtip",
-                fontSize = 14.sp,
-                color = Color.White,
-                textAlign = TextAlign.Right,
-                modifier = Modifier
-                    //.fillMaxWidth()
-                    .wrapContentWidth()
-                    .background(Color.DarkGray)
-                    .padding(all = 10.dp)
-                    .weight(1F)
-                    .clickable {
-                        randomJokeIndex = Random.nextInt(0, jokesAll.getJokesSize())
-                    }
-            )
+
+            ElevatedButton(onClick = { randomJokeIndex = Random.nextInt(0, jokesAll.getJokesSize()) }) {
+                Text("Další vtip")
+            }
+
+
+//            Text(
+//                text = "Další vtip",
+//                fontSize = 14.sp,
+//                color = Color.White,
+//                textAlign = TextAlign.Right,
+//                modifier = Modifier
+//                    //.fillMaxWidth()
+//                    .wrapContentWidth()
+//                    .background(Color.DarkGray)
+//                    .padding(all = 10.dp)
+//                    .weight(1F)
+//                    .clickable {
+//                        randomJokeIndex = Random.nextInt(0, jokesAll.getJokesSize())
+//                    }
+//            )
         }
         Spacer(modifier = Modifier
             .height(10.dp)
