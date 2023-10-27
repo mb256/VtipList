@@ -27,7 +27,13 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.Share
+import androidx.compose.material.icons.rounded.ShoppingCart
 import androidx.compose.material3.ElevatedButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -48,6 +54,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat.startActivity
 import com.example.vtiplist.ui.theme.VtipListTheme
 import kotlin.random.Random
 
@@ -90,6 +97,10 @@ fun RandomJoke(modifier: Modifier) {
     }
     var jokeText = jokesAll.jokeLists.get(randomJokeIndex).jokeText
 
+    val mainButtonColor = ButtonDefaults.buttonColors(
+        backgroundColor = Color.DarkGray,
+        contentColor = Color.White)
+
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier
@@ -108,10 +119,6 @@ fun RandomJoke(modifier: Modifier) {
                     .padding(all = 10.dp)
             )
 
-            val mainButtonColor = ButtonDefaults.buttonColors(
-                backgroundColor = Color.DarkGray,
-                contentColor = Color.White
-            )
             Button(
                 colors = mainButtonColor,
                 onClick = {
@@ -126,17 +133,42 @@ fun RandomJoke(modifier: Modifier) {
         Spacer(modifier = Modifier
             .height(10.dp)
             .background(Color.Gray))
-        Text(
-            text = jokeText,
-            fontSize = 18.sp,
-            textAlign = TextAlign.Center,
-            color = Color.White,
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(Color.Black)
-                .verticalScroll(state = rememberScrollState())
-                .padding(all = 20.dp)
-        )
+
+        Box (contentAlignment = Alignment.BottomEnd)
+        {
+            Text(
+                text = jokeText + "\n",
+                fontSize = 18.sp,
+                textAlign = TextAlign.Center,
+                color = Color.White,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(Color.Black)
+                    .verticalScroll(state = rememberScrollState())
+                    .padding(all = 20.dp)
+            )
+
+            ///////////////////////////////////
+            // For share functionality:
+            val mContext = LocalContext.current
+            val sendIntent: Intent = Intent().apply {
+                action = Intent.ACTION_SEND
+                putExtra(Intent.EXTRA_TEXT, "This is my text to send.")
+                type = "text/plain"
+            }
+
+            val shareIntent = Intent.createChooser(sendIntent, null)
+            // ////////////////////////////////
+            IconButton(onClick = { mContext.startActivity(sendIntent) }) {
+                Icon(
+                    Icons.Filled.Share,
+                    contentDescription = "Localized description",
+                    tint = Color(0xFFFFFFFF)
+                )
+            }
+
+        }
+
     }
 }
 

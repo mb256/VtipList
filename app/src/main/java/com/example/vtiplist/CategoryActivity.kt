@@ -1,22 +1,30 @@
 package com.example.vtiplist
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.Card
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shadow
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -117,14 +125,38 @@ fun ListOfJokes(categoryString : String, jokeList : List<Joke>) {
         }
 
         items(jokeList) { joke ->
-            Text(text = joke.jokeText,
-                color = Color.White,
-                fontSize = 20.sp,
-                textAlign = TextAlign.Start,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(Color.Black)
-                    .padding(all = 10.dp))
+
+            Box(contentAlignment = Alignment.BottomEnd) {
+                Text(
+                    text = joke.jokeText + "\n",
+                    color = Color.White,
+                    fontSize = 20.sp,
+                    textAlign = TextAlign.Start,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(Color.Black)
+                        .padding(all = 10.dp)
+                )
+
+                ///////////////////////////////////
+                // For share functionality:
+                val mContext = LocalContext.current
+                val sendIntent: Intent = Intent().apply {
+                    action = Intent.ACTION_SEND
+                    putExtra(Intent.EXTRA_TEXT, "This is my text to send.")
+                    type = "text/plain"
+                }
+
+                val shareIntent = Intent.createChooser(sendIntent, null)
+
+                IconButton(onClick = { mContext.startActivity(sendIntent) }) {
+                    Icon(
+                        Icons.Filled.Share,
+                        contentDescription = "Localized description",
+                        tint = Color(0xFFFFFFFF)
+                    )
+                }
+            }
         }
     }
 }
