@@ -153,7 +153,7 @@ fun RandomJoke(modifier: Modifier) {
             val mContext = LocalContext.current
             val sendIntent: Intent = Intent().apply {
                 action = Intent.ACTION_SEND
-                putExtra(Intent.EXTRA_TEXT, "This is my text to send.")
+                putExtra(Intent.EXTRA_TEXT, jokeText)
                 type = "text/plain"
             }
 
@@ -198,10 +198,10 @@ fun JokeCategory(modifier: Modifier, jokes: Jokes) {
         )
         Spacer(modifier = Modifier.height(10.dp))
 
-        val cat1 = CategoryDescr(R.drawable.figure, categoryList[0], jokes.getCategoryJokes(categoryList[0]))
-        val cat2 = CategoryDescr(R.drawable.figure, categoryList[1], jokes.getCategoryJokes(categoryList[1]))
-        val cat3 = CategoryDescr(R.drawable.figure, categoryList[2], jokes.getCategoryJokes(categoryList[2]))
-        val cat4 = CategoryDescr(R.drawable.figure, categoryList[3], jokes.getCategoryJokes(categoryList[3]))
+        val cat1 = CategoryDescr(R.drawable.category_men_and_women, categoryList[0], jokes.getCategoryJokes(categoryList[0]))
+        val cat2 = CategoryDescr(R.drawable.categoty_black_humor, categoryList[1], jokes.getCategoryJokes(categoryList[1]))
+        val cat3 = CategoryDescr(R.drawable.category_work, categoryList[2], jokes.getCategoryJokes(categoryList[2]))
+        val cat4 = CategoryDescr(R.drawable.category_it, categoryList[3], jokes.getCategoryJokes(categoryList[3]))
         RowCategory(Modifier.fillMaxWidth(), cat1, cat2)
         Spacer(modifier = Modifier.height(10.dp))
         RowCategory(Modifier.fillMaxWidth(), cat3, cat4)
